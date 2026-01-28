@@ -38,21 +38,24 @@ const HOROSCOPE_SCHEMA = {
   required: ["summary", "palaces", "career", "wealth", "love", "health", "currentYearForecast"]
 };
 
-export const generateHoroscope = async (input: UserInput): Promise<HoroscopeData> => {
+export const analyzeWithDeepSeek = async (input: UserInput): Promise<HoroscopeData> => {
+  // Sử dụng gemini-3-pro-preview với thinkingBudget tối đa để mô phỏng DeepSeek Reasoner
   const prompt = `
-    [SYSTEM: DEEP REASONING ASTROLOGY ENGINE]
-    Bạn là một bậc thầy Tử Vi phương Đông. Hãy thực hiện quy trình suy luận logic (Chain-of-Thought) để giải đoán lá số chi tiết:
+    [MODE: DEEPSEEK-REASONER-ASTROLOGY]
+    Bạn là một thực thể trí tuệ nhân tạo cấp cao chuyên giải đoán Tử Vi phương Đông. 
+    Hãy sử dụng quy trình suy luận logic (Chain-of-Thought) để phân tích lá số cho:
     - Họ tên: ${input.fullName}
     - Giới tính: ${input.gender}
     - Ngày sinh (Dương): ${input.birthDate}
     - Giờ sinh: ${input.birthHour}
 
     QUY TRÌNH PHÂN TÍCH:
-    1. Lập lá số: Xác định Tứ Trụ, Mệnh Cục và vòng Tràng Sinh.
-    2. An sao: Phân tích sự tương tác của Chính tinh và các bộ Phụ tinh (Cát, Hung, Sát tinh).
-    3. Luận giải: Đưa ra nhận định sâu sắc về 12 cung và vận hạn sắp tới.
+    1. Thiết lập bản đồ Can Chi, xác định Mệnh, Cục, Thân.
+    2. Giải đoán 12 cung số dựa trên sự hội tụ của chính tinh và phụ tinh.
+    3. Phân tích các mối quan hệ Ngũ Hành tương sinh tương khắc.
+    4. Đưa ra dự báo vận hạn chi tiết và lời khuyên tu thân.
 
-    Yêu cầu: Ngôn từ mang tính triết lý, học thuật, chính xác cao. Trả về định dạng JSON theo schema.
+    Yêu cầu: Kết quả trả về phải cực kỳ chi tiết, mang tính triết lý và độ chính xác cao.
   `;
 
   try {
@@ -68,7 +71,7 @@ export const generateHoroscope = async (input: UserInput): Promise<HoroscopeData
 
     return JSON.parse(response.text || '{}') as HoroscopeData;
   } catch (error) {
-    console.error("Gemini Service Error:", error);
+    console.error("DeepSeek Reasoner Analysis Error:", error);
     throw error;
   }
 };
