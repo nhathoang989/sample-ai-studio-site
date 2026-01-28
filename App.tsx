@@ -1,37 +1,20 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from './components/Layout';
 import ArticleCard from './components/ArticleCard';
-import AIAssistant from './components/AIAssistant';
 import GitHubStats from './components/GitHubStats';
 import { Post, NavigationTab } from './types';
 import { BLOG_POSTS } from './constants';
-import { geminiService } from './services/geminiService';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavigationTab>(NavigationTab.HOME);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  const [summary, setSummary] = useState<string | null>(null);
-  const [loadingSummary, setLoadingSummary] = useState(false);
 
   const handlePostClick = (post: Post) => {
     setSelectedPost(post);
     setActiveTab(NavigationTab.POST);
     window.scrollTo(0, 0);
   };
-
-  useEffect(() => {
-    if (selectedPost && activeTab === NavigationTab.POST) {
-      setSummary(null);
-      const getSummary = async () => {
-        setLoadingSummary(true);
-        const result = await geminiService.summarizePost(selectedPost.content);
-        setSummary(result);
-        setLoadingSummary(false);
-      };
-      getSummary();
-    }
-  }, [selectedPost, activeTab]);
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -74,7 +57,7 @@ const App: React.FC = () => {
           </section>
 
           {/* Featured Posts */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
             <div className="flex justify-between items-end mb-10">
               <div>
                 <h2 className="text-3xl font-bold text-slate-900">Bài viết nổi bật</h2>
@@ -92,11 +75,6 @@ const App: React.FC = () => {
                 <ArticleCard key={post.id} post={post} onClick={handlePostClick} />
               ))}
             </div>
-          </section>
-
-          {/* AI Assistant Promo */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-            <AIAssistant />
           </section>
         </div>
       )}
@@ -181,30 +159,10 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            <div className="lg:col-span-3 prose prose-indigo max-w-none text-slate-700">
-               {selectedPost.content.split('\n').map((para, i) => (
-                 <p key={i} className="mb-4 leading-relaxed">{para}</p>
-               ))}
-            </div>
-
-            <div className="lg:col-span-1">
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sticky top-24">
-                <h4 className="font-bold text-slate-900 mb-4 flex items-center">
-                  <i className="fas fa-magic text-indigo-500 mr-2"></i> Tóm tắt bởi AI
-                </h4>
-                {loadingSummary ? (
-                  <div className="flex flex-col items-center py-4 space-y-2">
-                    <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-xs text-slate-500">Đang tóm tắt...</span>
-                  </div>
-                ) : (
-                  <div className="text-sm text-slate-600 leading-relaxed">
-                    {summary}
-                  </div>
-                )}
-              </div>
-            </div>
+          <div className="prose prose-indigo max-w-none text-slate-700">
+             {selectedPost.content.split('\n').map((para, i) => (
+               <p key={i} className="mb-4 leading-relaxed text-lg">{para}</p>
+             ))}
           </div>
         </section>
       )}
