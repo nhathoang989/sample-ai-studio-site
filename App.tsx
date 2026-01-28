@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from './components/Header';
 import FormInput from './components/FormInput';
@@ -16,6 +15,7 @@ const App: React.FC = () => {
     setStatus(LoadingStatus.LOADING);
     setError(null);
     try {
+      // Sử dụng lại generateHoroscope từ geminiService như yêu cầu
       const result = await generateHoroscope(data);
       setHoroscopeData(result);
       setStatus(LoadingStatus.SUCCESS);
