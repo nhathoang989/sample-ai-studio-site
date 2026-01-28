@@ -1,19 +1,35 @@
 
-export interface Post {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  date: string;
-  category: string;
-  image: string;
-  readTime: string;
+export interface UserInput {
+  fullName: string;
+  birthDate: string;
+  birthHour: string;
+  gender: 'Nam' | 'Nữ';
 }
 
-export enum NavigationTab {
-  HOME = 'home',
-  BLOG = 'blog',
-  ABOUT = 'about',
-  POST = 'post'
+export interface PalaceInfo {
+  name: string;
+  meaning: string;
+  description: string;
+}
+
+export interface HoroscopeData {
+  summary: {
+    lunarDate: string;
+    destinyElement: string; // Mệnh
+    zodiacAnimal: string;
+    generalComment: string;
+  };
+  palaces: PalaceInfo[];
+  career: string;
+  wealth: string;
+  love: string;
+  health: string;
+  currentYearForecast: string;
+}
+
+export enum LoadingStatus {
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR'
 }
